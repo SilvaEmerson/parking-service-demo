@@ -1,6 +1,6 @@
 const request = require("supertest");
-const { app } = require("./app");
-const { db } = require("./database");
+const { app } = require("../src/app");
+const { db } = require("../src/database");
 
 beforeAll(async (done) => {
   await db.sync({ force: true });
@@ -182,7 +182,7 @@ describe("`/parking/:id/out` PUT tests", () => {
     done();
   });
 
-  it("should status code be 200 when `left` is false", async (done) => {
+  it("should status code be 200 when `paid` is true", async (done) => {
     const plate = "ABC-1234";
     const res = await request(app).post("/parking").send({
       plate,
@@ -217,7 +217,7 @@ describe("`/parking/:id/out` PUT tests", () => {
     done();
   });
 
-  it("should status code be 200 when `left` is false", async (done) => {
+  it("should status code be 409 when `paid` is false", async (done) => {
     const plate = "ABC-1234";
     const res = await request(app).post("/parking").send({
       plate,
@@ -232,6 +232,10 @@ describe("`/parking/:id/out` PUT tests", () => {
     );
 
     expect(outRes.statusCode).toEqual(409);
+    expect(outRes.body).toHaveProperty("error");
+    expect(outRes.body.error).toBe(
+      "Ticket não pode ser fechado porque não foi pago"
+    );
 
     const getRes = await request(app).get(`/parking/${plate}`);
 
@@ -242,6 +246,17 @@ describe("`/parking/:id/out` PUT tests", () => {
     expect(firstInstance.left).toBeFalsy();
     expect(firstInstance.leftAt).toBeNull();
     expect(firstInstance.time).toBeNull();
+
+    done();
+  });
+
+  it("should status code be 404 when ticket id is not found", async (done) => {
+    const randomId = Math.floor(Math.random() * 10000);
+    const outRes = await request(app).put(`/parking/${randomId}/out`);
+
+    expect(outRes.statusCode).toEqual(404);
+    expect(outRes.body).toHaveProperty("error");
+    expect(outRes.body.error).toBe("Ticket não encontrado");
 
     done();
   });
