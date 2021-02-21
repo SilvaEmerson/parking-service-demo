@@ -5,6 +5,7 @@ const loadDatabase = () => {
   const db = new Sequelize({
     dialect: "sqlite",
     storage: "database.sqlite",
+    logging: false,
   });
 
   return db;
@@ -12,6 +13,7 @@ const loadDatabase = () => {
 
 const db = loadDatabase()
 const parking = Parking(db);
+
 module.exports = {
   loadDatabase,
   db,
