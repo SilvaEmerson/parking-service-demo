@@ -1,9 +1,10 @@
 const { app } = require("./app");
 const { db } = require("./database");
 
+const PORT = process.env.API_PORT || 3000;
+
 const start = async () => {
-  const res = await db.authenticate();
-  console.log(res);
+  await db.authenticate();
   app.listen(PORT, () => {
     console.log(`API running at http://localhost:${PORT}`);
   });

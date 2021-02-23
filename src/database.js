@@ -3,8 +3,11 @@ const { Parking } = require("./models/parking");
 
 const loadDatabase = () => {
   const db = new Sequelize({
-    dialect: "sqlite",
-    storage: "database.sqlite",
+    dialect: "postgres",
+    host: process.env.DB_HOST,
+    password: process.env.POSTGRES_PASSWORD,
+    username: "postgres",
+    port: 5432,
     logging: false,
   });
 
