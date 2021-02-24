@@ -1,4 +1,4 @@
-FROM node:13-alpine AS base
+FROM node:14.16-alpine
 
 COPY . /api
 
