@@ -75,13 +75,15 @@ const closeTicket = async (req, res) => {
 
   if (!ticket) {
     res.status(404);
-    res.json({ error: "Ticket não encontrado" });
+    res.json({ error: "Ticket não encontrado" }).end();
     return;
   }
 
   if (!ticket.paid) {
     res.status(409);
-    res.json({ error: "Ticket não pode ser fechado porque não foi pago" });
+    res
+      .json({ error: "Ticket não pode ser fechado porque não foi pago" })
+      .end();
     return;
   }
 
@@ -105,7 +107,7 @@ const payTicket = async (req, res) => {
   );
   if (rowsAffected === 0) {
     res.status(404);
-    res.json({ error: "Ticket não encontrado" });
+    res.json({ error: "Ticket não encontrado" }).end();
     return;
   }
   res.status(200).end();

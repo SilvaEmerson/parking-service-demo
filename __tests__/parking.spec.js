@@ -68,6 +68,23 @@ describe("`/parking` POST tests", () => {
     expect(res.body.error).toBe("Propriedade `plate` não está presente");
     done();
   });
+
+  it("should status code be 409 when a plate already entered and not left", async (done) => {
+    const res = await request(app).post("/parking").send({
+      plate: "ABC-1234",
+    });
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("ticket_number");
+    expect(res.body.ticket_number).toBeGreaterThan(0);
+
+    const res2 = await request(app).post("/parking").send({
+      plate: "ABC-1234",
+    });
+
+    expect(res2.statusCode).toEqual(409);
+    expect(res2.body).toHaveProperty("error");
+    done();
+  });
 });
 
 describe("`/parking/:plate` GET tests", () => {
