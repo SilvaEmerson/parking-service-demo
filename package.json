@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles --coverage=true",
     "watch-test": "jest --watchAll",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
